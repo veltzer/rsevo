@@ -1,0 +1,53 @@
+schedule:
+  days: [Mon, Tue, Wed, Thu, Fri]
+  periods_per_day: 8
+
+rooms:
+  - { id: R101, capacity: 30, features: [whiteboard] }
+  - { id: R102, capacity: 30, features: [whiteboard] }
+  - { id: LAB1, capacity: 24, features: [computers, whiteboard] }
+  - { id: GYM,  capacity: 60, features: [gym] }
+
+teachers:
+  - id: T_smith
+    name: Smith
+    unavailable: [{ day: Fri, period: 8 }]
+    max_periods_per_day: 6
+  - id: T_jones
+    name: Jones
+    unavailable: []
+    max_periods_per_day: 6
+  - id: T_lee
+    name: Lee
+    unavailable: [{ day: Mon, period: 1 }, { day: Mon, period: 2 }]
+    max_periods_per_day: 5
+
+groups:
+  - { id: G_10A, size: 28 }
+  - { id: G_10B, size: 26 }
+  - { id: G_11A, size: 24 }
+
+subjects:
+  - { id: MATH,    name: Mathematics, requires_features: [whiteboard] }
+  - { id: CS,      name: Computer Science, requires_features: [computers] }
+  - { id: PE,      name: Physical Education, requires_features: [gym] }
+  - { id: ENG,     name: English, requires_features: [whiteboard] }
+
+# Lessons are the units to be placed: one lesson = one (group, subject, teacher)
+# meeting one period long. Use `count` to schedule N copies per week.
+lessons:
+  - { group: G_10A, subject: MATH, teacher: T_smith, count: 5 }
+  - { group: G_10A, subject: ENG,  teacher: T_jones, count: 4 }
+  - { group: G_10A, subject: CS,   teacher: T_lee,   count: 3 }
+  - { group: G_10A, subject: PE,   teacher: T_jones, count: 2 }
+  - { group: G_10B, subject: MATH, teacher: T_smith, count: 5 }
+  - { group: G_10B, subject: ENG,  teacher: T_jones, count: 4 }
+  - { group: G_10B, subject: CS,   teacher: T_lee,   count: 3 }
+  - { group: G_11A, subject: MATH, teacher: T_smith, count: 4 }
+  - { group: G_11A, subject: CS,   teacher: T_lee,   count: 4 }
+
+# Soft preferences contribute to fitness but do not invalidate a solution.
+preferences:
+  - { kind: avoid_period, period: 1, weight: 1 }   # nobody loves first period
+  - { kind: spread_subject, subject: MATH, weight: 3 } # don't bunch math
+  - { kind: teacher_compact_day, weight: 2 }       # minimize teacher gaps
