@@ -1,0 +1,3 @@
+# rsevo
+
+Evolutionary timetabling engine.
