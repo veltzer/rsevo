@@ -25,30 +25,39 @@ A configuration whose hard constraints are mutually unsatisfiable is **infeasibl
 ## Hard constraints
 
 ### H1 — Single placement
+
 Every lesson instance is placed exactly once. No instance is dropped; none is duplicated.
 
 ### H2 — Teacher non-overlap
+
 A teacher is in at most one room in any given slot.
 
 ### H3 — Group non-overlap
+
 A student group attends at most one lesson in any given slot.
 
 ### H4 — Room non-overlap
+
 A room hosts at most one lesson in any given slot.
 
 ### H5 — Teacher availability
+
 A lesson taught by teacher `T` cannot be placed in any slot listed in `T.unavailable`.
 
 ### H6 — Room feature requirements
+
 If subject `S` declares `requires_features: [...]`, the room hosting any lesson of `S` must include all listed features.
 
 ### H7 — Room capacity
+
 The room hosting a lesson for group `G` must have `capacity >= G.size`.
 
 ### H8 — Teacher daily load cap
+
 For each (teacher, day) pair, the number of assigned lessons must not exceed `teacher.max_periods_per_day`.
 
 ### H9 — Block integrity *(only if blocks are added — see Open Questions)*
+
 A multi-period lesson block occupies consecutive periods within the same day, in the same room, with the same teacher and group throughout.
 
 ---
@@ -58,24 +67,29 @@ A multi-period lesson block occupies consecutive periods within the same day, in
 Each preference declared in YAML carries a positive `weight`. Fitness penalty for a solution = Σ over violations of `weight × violation_magnitude`. Lower is better.
 
 ### S1 — `avoid_period`
+
 **Spec:** `{ kind: avoid_period, period: P, weight: W }`
 **Penalty:** `W` per lesson placed in period `P`.
 **Intent:** Discourage scheduling in unpopular slots (e.g. first period).
 
 ### S2 — `spread_subject`
+
 **Spec:** `{ kind: spread_subject, subject: SUBJ, weight: W }`
 **Penalty:** For each group, count days with ≥2 lessons of `SUBJ`. Penalty = `W × Σ (lessons_of_subj_on_day - 1)` over days with surplus.
 **Intent:** Avoid bunching the same subject (e.g. three math classes in one day).
 
 ### S3 — `teacher_compact_day`
+
 **Spec:** `{ kind: teacher_compact_day, weight: W }`
 **Penalty:** For each (teacher, day), let `span = last_period - first_period + 1` and `taught = count of lessons that day`. Gaps = `span - taught`. Penalty = `W × Σ gaps`.
 **Intent:** Minimize idle gaps in a teacher's day.
 
 ### S4 — `group_compact_day` *(proposed)*
+
 Symmetric to S3 but for student groups. **TBD: include?**
 
 ### S5 — `prefer_room` *(proposed)*
+
 Bias a subject or teacher toward a specific room when possible. **TBD: include?**
 
 ---
