@@ -38,7 +38,7 @@ fn main() -> Result<()> {
 
     let demand = cfg.total_lesson_instances();
     let supply_per_room = cfg.total_slots();
-    let total_supply = supply_per_room * cfg.rooms.len() as u32;
+    let total_supply = supply_per_room * u32::try_from(cfg.rooms.len())?;
     println!("  capacity check: demand={demand} room-slots-available={total_supply}");
 
     Ok(())

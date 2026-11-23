@@ -109,7 +109,8 @@ impl Config {
     }
 
     pub fn total_slots(&self) -> u32 {
-        self.schedule.days.len() as u32 * self.schedule.periods_per_day
+        u32::try_from(self.schedule.days.len()).expect("day count fits in u32")
+            * self.schedule.periods_per_day
     }
 }
 
@@ -119,7 +120,7 @@ mod tests {
 
     /// A minimal, internally consistent config used as the basis for the tests.
     fn valid_yaml() -> &'static str {
-        r#"
+        r"
 schedule:
   days: [Mon, Tue, Wed]
   periods_per_day: 4
@@ -134,7 +135,7 @@ subjects:
 lessons:
   - { group: G1, subject: S1, teacher: T1, count: 3 }
   - { group: G1, subject: S1, teacher: T1, count: 2 }
-"#
+"
     }
 
     fn parse(yaml: &str) -> Result<Config> {
