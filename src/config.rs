@@ -77,7 +77,7 @@ impl Config {
     pub fn from_yaml_file(path: &Path) -> Result<Self> {
         let text = std::fs::read_to_string(path)
             .with_context(|| format!("reading config file {}", path.display()))?;
-        let cfg: Config = serde_norway::from_str(&text)
+        let cfg: Self = serde_norway::from_str(&text)
             .with_context(|| format!("parsing YAML in {}", path.display()))?;
         cfg.validate()?;
         Ok(cfg)
