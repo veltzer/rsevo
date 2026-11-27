@@ -1,3 +1,5 @@
+//! rsevo: GA-based school/uni timetabling.
+
 mod config;
 
 use anyhow::Result;
